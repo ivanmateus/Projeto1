@@ -6,32 +6,37 @@ struct entrada {
 	int *hobbies;
 };
 
+//Faz uma copia do vetor de hobbies para nao mudar o original
+//Ordena essa copia e a cada troca realizada, incrementa o valor de 'inversoes'
+//No fim, retorna o numero de trocas
 int inversoes_bubble_sort(int *hobbies, int tamanho) {
 	int i = 0;
 	int iteracao = 0;
 	int ordenado = 0;
 	int aux = 0;
 	int inversoes = 0;
-	int *auxHobbies = (int *) malloc(tamanho * sizeof(int));
-	for(i = 0; i < tamanho; ++i){
+	int *auxHobbies = (int *) malloc(tamanho * sizeof(int));	//aloca memoria para a copia
+	for(i = 0; i < tamanho; ++i){	//faz a copia
 		auxHobbies[i] = hobbies[i];
 	}
-	while (!ordenado) {
-		ordenado = 1;
-		for (i = 0; i < tamanho - iteracao - 1; ++i) {
-			if (auxHobbies[i] > auxHobbies[i + 1]) {
-				ordenado = 0;
+	while (!ordenado) {	//verifica se ja ordenou (se sim, para)
+		ordenado = 1;	//supoe-se que ja esta ordenado inicialmente
+		for (i = 0; i < tamanho - iteracao - 1; ++i) {	//a cada iteracao, 'exclui' o maior elemento, para nao percorrer todo o vetor sempre
+			if (auxHobbies[i] > auxHobbies[i + 1]) {	//se o anterior for maior que o proximo, troca
+				ordenado = 0;	//marca que o vetor ainda nao esta ordenado
 				aux = auxHobbies[i];
 				auxHobbies[i] = auxHobbies[i + 1];
 				auxHobbies[i + 1] = aux;
-				++inversoes;
+				++inversoes;	//conta essa troca
 			}
 		}
-		++iteracao;
+		++iteracao;	//conta uma iteracao
 	}
 	return inversoes;
 }
 
+//Ordena crescentemente os elementos em relacao ao numero de trocas adjacentes
+//E crescentemente em relacao aos ids que possuem valores de troca iguais
 void quick_sort_afinidades_ids(struct entrada *entradas, int *inversoes, int ini, int fim) {
 	int i = ini;
 	int j = ini;
@@ -65,11 +70,11 @@ int *solucao(struct entrada *entradas, int n, int h)
 	int i = 0;
 	int *ret = (int *) malloc(n * sizeof(int));
 	int *inversoes = (int *) malloc(n * sizeof(int));
-	for(i = 0; i < n; ++i) {
+	for(i = 0; i < n; ++i) {	//guarda o numero de trocas de cada usuario
 		inversoes[i] = inversoes_bubble_sort(entradas[i].hobbies, h);
 	}
-	quick_sort_afinidades_ids(entradas, inversoes, 0, n - 1);
-	for(i = 0; i < n; ++i) {
+	quick_sort_afinidades_ids(entradas, inversoes, 0, n - 1);	//ordena os usuarios de acordo com os quesitos ja especificados anteriormente
+	for(i = 0; i < n; ++i) {	//guarda os ids
 		ret[i] = entradas[i].usuario_id;
 	}
 	return ret;

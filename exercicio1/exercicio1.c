@@ -6,7 +6,7 @@ struct entrada {
 	int a, l, c;
 };
 
-//Ordena decescentemente os elementos em relacao aos volumes
+//Ordena decrescentemente os elementos em relacao aos volumes
 //E crescentemente em relacao aos ids que possuem valores de volume iguais
 void quick_sort_volumes_ids(struct entrada *entradas, int ini, int fim) {
 	int i = ini;
