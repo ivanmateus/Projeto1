@@ -16,7 +16,7 @@ void quick_sort_volumes_ids(struct entrada *entradas, int ini, int fim) {
 	struct entrada aux;
 	while (j < fim) {       //enquanto nao chegar no pivo
 		volJ = entradas[j].a * entradas[j].l * entradas[j].c;   //calcula o volume do j-esimo elemento
-		volFim = entradas[fim].a * entradas[fim].l * entradas[fim].c;   //calcula o elemento do pivo
+		volFim = entradas[fim].a * entradas[fim].l * entradas[fim].c;   //calcula o volume do elemento do pivo
 		if (volJ > volFim || (entradas[j].id < entradas[fim].id && volJ == volFim)) {   //troca se satisfizer os criterios descritos acima da funcao
 			aux = entradas[i];
 			entradas[i] = entradas[j];
