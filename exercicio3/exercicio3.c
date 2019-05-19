@@ -21,26 +21,24 @@ int *given_taken(struct entrada *entradas, int *teams, int j, int m) {
     return ret;
 }
 
-int check_for_tie(struct entrada *entradas, int *points, int *teams, int j, int m) {
-    printf("\ntime %d e time %d", teams[j], teams[j + 1]);
+int check_for_tie(struct entrada *entradas, int *points, int *teams, int j, int m, int fim) {
     int should_switch = 0;
     int a_given = given_taken(entradas, teams, j, m)[0];
     int a_taken = given_taken(entradas, teams, j, m)[1];
 
-    int b_given = given_taken(entradas, teams, j + 1, m)[0];
-    int b_taken = given_taken(entradas, teams, j + 1, m)[1];
+    int b_given = given_taken(entradas, teams, fim, m)[0];
+    int b_taken = given_taken(entradas, teams, fim, m)[1];
 
     float a_avg = a_taken != 0 ? (float)a_given / a_taken : (float)a_given;
     float b_avg = b_taken != 0 ? (float)b_given / b_taken : (float)b_given;
 
-    printf("\navg a: %f = avg b: %f\n", a_avg, b_avg);
     if (a_avg < b_avg) {
         should_switch = 1;
     } else if (a_avg == b_avg) {
         if (a_given < b_given) {
             should_switch = 1;
         } else if (a_given = b_given) {
-            if (teams[j] > teams[j + 1]) {
+            if (teams[j] > teams[fim]) {
                 should_switch = 1;
             }
         }
@@ -48,36 +46,42 @@ int check_for_tie(struct entrada *entradas, int *points, int *teams, int j, int 
     return should_switch;
 }
 
-void sort_both(struct entrada *entradas, int *points, int *teams, int n, int m) {
-    int i, j, troca, temp;
-    for (i = 0; i < n - 1; i++) {
-        troca = 0;
-        for (j = 0; j < n - i - 1; j++) {
-            if (points[j] < points[j + 1]) {
-                temp = points[j];
-                points[j] = points[j + 1];
-                points[j + 1] = temp;
+void quick_sort_recursivo(struct entrada *entradas, int *teams, int n, int m, int *points, int ini,
+                          int fim) {
+    int i = ini, j, aux;
+    for (j = ini; j < fim; j++)
+        if (points[j] > points[fim]) {
+            aux = points[i];
+            points[i] = points[j];
+            points[j] = aux;
 
-                temp = teams[j];
-                teams[j] = teams[j + 1];
-                teams[j + 1] = temp;
-                troca = 1;
-            } else if (points[j] == points[j + 1]) {
-                if (check_for_tie(entradas, points, teams, j, m) == 1) {
-                    temp = points[j];
-                    points[j] = points[j + 1];
-                    points[j + 1] = temp;
+            aux = teams[i];
+            teams[i] = teams[j];
+            teams[j] = aux;
+            i++;
+        } else if (points[j] == points[fim]) {
+            if (check_for_tie(entradas, points, teams, j, m, fim) == 1) {
+                aux = points[i];
+                points[i] = points[j];
+                points[j] = aux;
 
-                    temp = teams[j];
-                    teams[j] = teams[j + 1];
-                    teams[j + 1] = temp;
-                    troca = 1;
-                }
+                aux = teams[i];
+                teams[i] = teams[j];
+                teams[j] = aux;
+                i++;
             }
         }
+    aux = points[fim];
+    points[fim] = points[i];
+    points[i] = aux;
+    if (ini > i - 1) quick_sort_recursivo(entradas, teams, n, m, points, ini, i - 1);
+    if (i + 1 > fim) quick_sort_recursivo(entradas, teams, n, m, points, i + 1, fim);
+    return;
+}
 
-        if (troca == 0) break;
-    }
+void sort_both(struct entrada *entradas, int *points, int *teams, int n, int m) {
+    quick_sort_recursivo(entradas, teams, n, m, points, 0, n - 1);
+    return;
 }
 
 // Função para cálculo de pontos do jogo
@@ -117,11 +121,6 @@ int *solucao(struct entrada *entradas, int m, int n_teams) {
     }
 
     sort_both(entradas, team_points, ret, n_teams, m);
-    printf("\nPontos: ");
-    for (int i = 0; i < n_teams; i++) {
-        printf("%d ", team_points[i]);
-    }
-    printf("\n");
     return ret;
 }
 
