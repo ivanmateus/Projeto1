@@ -117,11 +117,6 @@ int *solucao(struct entrada *entradas, int m, int n_teams) {
     }
 
     sort_both(entradas, team_points, ret, n_teams, m);
-    printf("\nPontos: ");
-    for (int i = 0; i < n_teams; i++) {
-        printf("%d ", team_points[i]);
-    }
-    printf("\n");
     return ret;
 }
 
@@ -143,7 +138,7 @@ int main() {
 
         ret = solucao(entradas, m, N);
 
-        printf("Caso de teste %d\n", t);
+        printf("Caso de teste %d\n", t + 1);
         for (i = 0; i < N; i++)
             if (i + 1 < N)
                 printf("%d ", ret[i]);
