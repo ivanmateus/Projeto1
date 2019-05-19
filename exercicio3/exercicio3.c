@@ -142,7 +142,7 @@ int main() {
 
         ret = solucao(entradas, m, N);
 
-        printf("Caso de teste %d\n", t);
+        printf("Caso de teste %d\n", t + 1);
         for (i = 0; i < N; i++)
             if (i + 1 < N)
                 printf("%d ", ret[i]);
